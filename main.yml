@@ -1,0 +1,27 @@
+name: Bot de Apostas Diario
+
+on:
+  schedule:
+    - cron: '0 12,15,18,21 * * *' # Roda às 09h, 12h, 15h e 18h (Horário de Brasília)
+  workflow_dispatch: # Permite rodar manualmente pelo site do GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Instalar Dependências
+        run: pip install requests
+
+      - name: Executar Bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot_apostas.py
